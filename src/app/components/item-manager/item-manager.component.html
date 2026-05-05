@@ -1,0 +1,47 @@
+<div class="container">
+
+  <div class="header">
+    <h1 class="title">Tooted</h1>
+  </div>
+
+  <div class="form-section">
+
+    <!-- Category selector -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Kategooria</mat-label>
+      <mat-select [(ngModel)]="selectedCategoryId">
+        <mat-option [value]="NONE_ID">None</mat-option>
+        @for (cat of nonNoneCategories; track cat.id) {
+          <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Item autocomplete -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Toode</mat-label>
+      <input
+        matInput
+        [(ngModel)]="itemLabel"
+        placeholder="Sisesta toode"
+        [matAutocomplete]="autoItem">
+      <mat-autocomplete #autoItem (optionSelected)="onItemSelect($event.option.value)">
+        @for (opt of filteredMasterItems; track opt) {
+          <mat-option [value]="opt">{{ opt }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <div class="button-row">
+      <button mat-raised-button color="primary" (click)="saveItem()">Salvesta</button>
+      <button mat-raised-button color="warn" (click)="removeItem()">Eemalda</button>
+    </div>
+
+  </div>
+
+  <div class="bottom-buttons">
+    <button mat-stroked-button routerLink="/">Tagasi</button>
+  </div>
+
+</div>
+

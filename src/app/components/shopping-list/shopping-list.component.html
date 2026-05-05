@@ -1,0 +1,76 @@
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="title">Nimekiri</h1>
+    <div class="nav-buttons">
+      <button mat-stroked-button routerLink="/categories">Kategooriad</button>
+      <button mat-stroked-button routerLink="/items">Tooted</button>
+    </div>
+  </div>
+
+  <!-- Item rows -->
+  <div class="list-scroll">
+    @for (item of shoppingList(); track item.id; let idx = $index) {
+      <div class="item-row" [class.is-checked]="item.isChecked">
+
+        <mat-checkbox
+          [checked]="item.isChecked"
+          (change)="toggleChecked(item.id)">
+        </mat-checkbox>
+
+        <input
+          class="qty-input"
+          type="number"
+          min="1"
+          [value]="item.quantity"
+          [class.qty-checked]="item.isChecked"
+          (change)="updateQuantity(item.id, +$any($event.target).value)">
+
+        <mat-form-field class="label-field" appearance="outline" subscriptSizing="dynamic">
+          <input
+            matInput
+            #labelInput
+            [attr.data-item-id]="item.id"
+            [value]="item.label"
+            placeholder="Shopping Item"
+            [matAutocomplete]="auto"
+            [class.strikethrough]="item.isChecked"
+            enterkeyhint="next"
+            (input)="onLabelInput(item.id, $any($event.target).value)"
+            (keydown.enter)="onEnter(item.id, $any($event.target).value, $any($event), idx)">
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="onAutocompleteSelect(item.id, $event.option.value)">
+            @for (opt of getSuggestions(item.id); track opt) {
+              <mat-option [value]="opt">{{ opt }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <button
+          mat-icon-button
+          class="status-btn"
+          [class.status-ok]="isCategorised(item)"
+          [class.status-warn]="!isCategorised(item)"
+          [matTooltip]="isCategorised(item) ? 'Kategoriseeritud' : 'Kategooria puudub'"
+          (click)="onStatusClick(item.id, item.label)">
+          <mat-icon>{{ isCategorised(item) ? 'check_circle' : 'warning' }}</mat-icon>
+        </button>
+
+        <button mat-icon-button class="delete-btn" (click)="deleteItem(item.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+
+      </div>
+    }
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <button mat-raised-button color="primary" (click)="sortList()">Sorteeri</button>
+  </div>
+
+</div>
+
+

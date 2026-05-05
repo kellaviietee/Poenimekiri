@@ -1,0 +1,67 @@
+<div class="container">
+
+  <div class="header">
+    <h1 class="title">Kategooriad</h1>
+  </div>
+
+  <div class="form-section">
+
+    <!-- Category selector dropdown -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Vali kategooria</mat-label>
+      <mat-select [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategorySelect($event)">
+        <mat-option [value]="NONE_ID">-- Uus kategooria --</mat-option>
+        @for (cat of nonNoneCategories(); track cat.id) {
+          <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Name input -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nimi</mat-label>
+      <input matInput [(ngModel)]="categoryName" placeholder="Kategooria nimi">
+    </mat-form-field>
+
+    <!-- Priority input -->
+    <mat-form-field appearance="outline" class="priority-field">
+      <mat-label>Priority</mat-label>
+      <input matInput type="number" min="1" [(ngModel)]="categoryPriority"
+             placeholder="Prioriteet">
+    </mat-form-field>
+
+    <div class="button-row">
+      <button mat-raised-button color="primary" (click)="saveCategory()">Salvesta</button>
+      <button
+        mat-raised-button color="warn"
+        [disabled]="selectedCategoryId === NONE_ID"
+        (click)="removeCategory()">
+        Eemalda
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Categories list -->
+  <div class="categories-list">
+    @for (cat of sortedCategories(); track cat.id) {
+      @if (cat.id !== NONE_ID) {
+        <div class="category-row">
+          <span class="cat-name">{{ cat.name }}</span>
+          <span class="cat-priority">{{ cat.priority != null ? 'P' + cat.priority : '' }}</span>
+        </div>
+      }
+    }
+    @if (nonNoneCategories().length === 0) {
+      <p class="empty-hint">Kategooriaid pole lisatud.</p>
+    }
+  </div>
+
+  <!-- Bottom actions -->
+  <div class="bottom-buttons">
+    <button mat-raised-button color="warn" (click)="removeAllCategories()">Eemalda kõik</button>
+    <button mat-stroked-button routerLink="/">Tagasi</button>
+  </div>
+
+</div>
+
