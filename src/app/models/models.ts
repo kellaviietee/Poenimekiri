@@ -18,6 +18,8 @@ export interface ShoppingItem {
   quantity: number;
   isChecked: boolean;
   categoryId: string | null;
+  /** Unix ms timestamp used to preserve insertion order across Firebase syncs */
+  createdAt: number;
 }
 
 export interface MasterItem {

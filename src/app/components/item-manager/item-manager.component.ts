@@ -34,7 +34,10 @@ export class ItemManagerComponent implements OnInit {
   itemLabel: string = '';
 
   get nonNoneCategories() {
-    return this.service.categories().filter(c => c.id !== NONE_CATEGORY_ID);
+    return this.service
+      .categories()
+      .filter(c => c.id !== NONE_CATEGORY_ID)
+      .sort((a, b) => (a.priority ?? Infinity) - (b.priority ?? Infinity));
   }
 
   get filteredMasterItems(): string[] {

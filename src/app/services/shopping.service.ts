@@ -40,7 +40,12 @@ export class ShoppingService {
       };
 
       this.fb.subscribe<ShoppingItem>('shoppingList', items => {
-        this.shoppingList.set(items);
+        // Sort by createdAt so insertion order is preserved regardless of
+        // the key order Firebase returns. Items without a createdAt (legacy)
+        // fall back to 0 and appear first.
+        this.shoppingList.set(
+          [...items].sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0))
+        );
         if (!loaded.shopping) { loaded.shopping = true; checkDone(); }
       });
 
@@ -102,6 +107,7 @@ export class ShoppingService {
       quantity: 1,
       isChecked: false,
       categoryId: null,
+      createdAt: Date.now(),
     };
   }
 

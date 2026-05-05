@@ -34,7 +34,10 @@ export class CategoryManagerComponent implements OnInit {
   categoryPriority: number | null = null;
 
   readonly nonNoneCategories = computed(() =>
-    this.service.categories().filter(c => c.id !== NONE_CATEGORY_ID)
+    this.service
+      .categories()
+      .filter(c => c.id !== NONE_CATEGORY_ID)
+      .sort((a, b) => (a.priority ?? Infinity) - (b.priority ?? Infinity))
   );
 
   readonly sortedCategories = computed(() =>
